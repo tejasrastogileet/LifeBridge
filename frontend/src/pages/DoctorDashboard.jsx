@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -28,11 +28,14 @@ const DoctorDashboard = () => {
 
   const token = localStorage.getItem("token");
 
-  const authHeader = {
-    headers: {
-      "x-access-token": localStorage.getItem("token")
-    },
-  };
+  const authHeader = useMemo(
+    () => ({
+      headers: {
+        "x-access-token": token,
+      },
+    }),
+    [token]
+  );
 
   /* ================= LOAD ================= */
 
