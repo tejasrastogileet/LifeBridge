@@ -85,6 +85,7 @@ const DonorDashboard = () => {
   }, [token]);
 
   // Used in organ matching UI
+  // eslint-disable-next-line no-unused-vars
   const handleAcceptOrgan = async (organId) => {
     setIsLoading(true);
     setLoadingMessage("Accepting organ request...");

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -36,27 +36,16 @@ const DoctorDashboard = () => {
 
   /* ================= LOAD ================= */
 
-  useEffect(() => {
-    if (!token) {
-      navigate("/login");
-      return;
-    }
-    fetchDashboard();
-    fetchAllocations();
-  }, [token, navigate]);
-
-  /* ================= API CALLS ================= */
-
-  const fetchDashboard = async () => {
+  const fetchDashboard = useCallback(async () => {
     try {
       const res = await api.get("/doctor/dashboard", authHeader);
       setDashboard(res.data.data);
     } catch (err) {
       console.log(err);
     }
-  };
+  }, [authHeader]);
 
-  const fetchAllocations = async () => {
+  const fetchAllocations = useCallback(async () => {
     try {
       const res = await api.get(`/doctor/allocations?status=ALL_ACTIVE`, authHeader);
       setAllocations(res.data.data);
@@ -64,7 +53,16 @@ const DoctorDashboard = () => {
     } catch (err) {
       console.log(err);
     }
-  };
+  }, [authHeader]);
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+    fetchDashboard();
+    fetchAllocations();
+  }, [token, navigate, fetchDashboard, fetchAllocations]);
 
   const findAvailable = async () => {
     try {
